@@ -1,4 +1,4 @@
-module github.com/descope/virtualwebauthn
+module github.com/developmeh/virtualwebauthn
 
 go 1.23.0
 
