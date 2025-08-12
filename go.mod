@@ -5,6 +5,7 @@ go 1.23.0
 toolchain go1.24.5
 
 require (
+	github.com/descope/virtualwebauthn v1.0.3
 	github.com/fxamacker/cbor/v2 v2.9.0
 	github.com/fxamacker/webauthn v0.6.1
 	github.com/go-webauthn/webauthn v0.13.4

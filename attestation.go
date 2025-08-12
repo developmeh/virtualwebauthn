@@ -133,23 +133,22 @@ func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credent
 
 	credIDEncoded := base64.RawURLEncoding.EncodeToString(cred.ID)
 
+	transports := []string{"hybrid", "internal"}
+
 	attestationResponse := attestationResponse{
 		AttestationObject: attestationObjectEncoded,
 		ClientDataJSON:    clientDataJSONEncoded,
+		Transports:        transports,
 	}
 
-	// Create clientExtensionResults with credProps extension
-	clientExtensionResults := map[string]interface{}{
-		"credProps": map[string]interface{}{
-			"rk": true,
-		},
-	}
+	// Create clientExtensionResults - empty map for attestation responses
+	clientExtensionResults := map[string]interface{}{}
 
 	attestationResult := attestationResult{
-		Type:                  "public-key",
-		ID:                    credIDEncoded,
-		RawID:                 credIDEncoded,
-		Response:              attestationResponse,
+		Type:                   "public-key",
+		ID:                     credIDEncoded,
+		RawID:                  credIDEncoded,
+		Response:               attestationResponse,
 		ClientExtensionResults: clientExtensionResults,
 	}
 
@@ -199,14 +198,15 @@ type attestationObject struct {
 }
 
 type attestationResponse struct {
-	AttestationObject string `json:"attestationObject"`
-	ClientDataJSON    string `json:"clientDataJSON"`
+	AttestationObject string   `json:"attestationObject"`
+	ClientDataJSON    string   `json:"clientDataJSON"`
+	Transports        []string `json:"transports"`
 }
 
 type attestationResult struct {
-	Type                  string                 `json:"type"`
-	ID                    string                 `json:"id"`
-	RawID                 string                 `json:"rawId"`
-	Response              attestationResponse    `json:"response"`
+	Type                   string                 `json:"type"`
+	ID                     string                 `json:"id"`
+	RawID                  string                 `json:"rawId"`
+	Response               attestationResponse    `json:"response"`
 	ClientExtensionResults map[string]interface{} `json:"clientExtensionResults"`
 }
