@@ -100,11 +100,15 @@ func CreateAssertionResponse(rp RelyingParty, auth Authenticator, cred Credentia
 		UserHandle:        base64.RawURLEncoding.EncodeToString(auth.Options.UserHandle),
 	}
 
+	// Create clientExtensionResults - empty map for assertion responses
+	clientExtensionResults := map[string]interface{}{}
+
 	assertionResult := assertionResult{
-		Type:     "public-key",
-		ID:       credIDEncoded,
-		RawID:    credIDEncoded,
-		Response: assertionResponse,
+		Type:                  "public-key",
+		ID:                    credIDEncoded,
+		RawID:                 credIDEncoded,
+		Response:              assertionResponse,
+		ClientExtensionResults: clientExtensionResults,
 	}
 
 	assertionResultBytes, err := json.Marshal(assertionResult)
@@ -137,8 +141,9 @@ type assertionResponse struct {
 }
 
 type assertionResult struct {
-	Type     string            `json:"type"`
-	ID       string            `json:"id"`
-	RawID    string            `json:"rawId"`
-	Response assertionResponse `json:"response"`
+	Type                  string                 `json:"type"`
+	ID                    string                 `json:"id"`
+	RawID                 string                 `json:"rawId"`
+	Response              assertionResponse      `json:"response"`
+	ClientExtensionResults map[string]interface{} `json:"clientExtensionResults"`
 }

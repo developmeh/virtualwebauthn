@@ -138,11 +138,19 @@ func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credent
 		ClientDataJSON:    clientDataJSONEncoded,
 	}
 
+	// Create clientExtensionResults with credProps extension
+	clientExtensionResults := map[string]interface{}{
+		"credProps": map[string]interface{}{
+			"rk": true,
+		},
+	}
+
 	attestationResult := attestationResult{
-		Type:     "public-key",
-		ID:       credIDEncoded,
-		RawID:    credIDEncoded,
-		Response: attestationResponse,
+		Type:                  "public-key",
+		ID:                    credIDEncoded,
+		RawID:                 credIDEncoded,
+		Response:              attestationResponse,
+		ClientExtensionResults: clientExtensionResults,
 	}
 
 	attestationResultBytes, err := json.Marshal(attestationResult)
@@ -196,8 +204,9 @@ type attestationResponse struct {
 }
 
 type attestationResult struct {
-	Type     string              `json:"type"`
-	ID       string              `json:"id"`
-	RawID    string              `json:"rawId"`
-	Response attestationResponse `json:"response"`
+	Type                  string                 `json:"type"`
+	ID                    string                 `json:"id"`
+	RawID                 string                 `json:"rawId"`
+	Response              attestationResponse    `json:"response"`
+	ClientExtensionResults map[string]interface{} `json:"clientExtensionResults"`
 }
