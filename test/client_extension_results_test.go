@@ -9,7 +9,7 @@ import (
 )
 
 // TestAttestationClientExtensionResults verifies that attestation responses include
-// the correct clientExtensionResults with credProps extension
+// an empty clientExtensionResults map
 func TestAttestationClientExtensionResults(t *testing.T) {
 	// Create a mock relying party, mock authenticator and a mock credential
 	rp := virtualwebauthn.RelyingParty{Name: WebauthnDisplayName, ID: WebauthnDomain, Origin: WebauthnOrigin}
@@ -38,21 +38,10 @@ func TestAttestationClientExtensionResults(t *testing.T) {
 	require.True(t, exists, "clientExtensionResults should exist in attestation response")
 	require.NotNil(t, clientExtensionResults, "clientExtensionResults should not be nil")
 
-	// Verify credProps extension exists
-	credPropsMap, ok := clientExtensionResults.(map[string]interface{})
+	// Verify clientExtensionResults is an empty map
+	clientExtensionResultsMap, ok := clientExtensionResults.(map[string]interface{})
 	require.True(t, ok, "clientExtensionResults should be a map")
-
-	credProps, exists := credPropsMap["credProps"]
-	require.True(t, exists, "credProps should exist in clientExtensionResults")
-	require.NotNil(t, credProps, "credProps should not be nil")
-
-	// Verify rk property exists and is true
-	credPropsMap, ok = credProps.(map[string]interface{})
-	require.True(t, ok, "credProps should be a map")
-
-	rk, exists := credPropsMap["rk"]
-	require.True(t, exists, "rk should exist in credProps")
-	require.Equal(t, true, rk, "rk should be true")
+	require.Empty(t, clientExtensionResultsMap, "clientExtensionResults should be an empty map")
 }
 
 // TestAssertionClientExtensionResults verifies that assertion responses include
