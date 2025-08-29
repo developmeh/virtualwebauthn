@@ -65,7 +65,13 @@ func ParseAttestationOptions(str string) (attestationOptions *AttestationOptions
 
 /// Response
 
-func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credential, options AttestationOptions, transports []Transport) string {
+// CreateAttestationResponse creates an attestation response with default empty clientExtensionResults and Default Transports (Hybrid and Internal)
+func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credential, options AttestationOptions) string {
+	return CreateAttestationResponseWithExtensions(rp, auth, cred, options, map[string]interface{}{}, []Transport{TransportHybrid, TransportInternal})
+}
+
+// CreateAttestationResponseWithExtensions creates an attestation response with custom clientExtensionResults and transports
+func CreateAttestationResponseWithExtensions(rp RelyingParty, auth Authenticator, cred Credential, options AttestationOptions, clientExtensionResults map[string]interface{}, transports []Transport) string {
 	clientData := clientData{
 		Type:      "webauthn.create",
 		Challenge: base64.RawURLEncoding.EncodeToString(options.Challenge),
@@ -140,9 +146,6 @@ func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credent
 		ClientDataJSON:    clientDataJSONEncoded,
 		Transports:        translatedTransports,
 	}
-
-	// Create clientExtensionResults - empty map for attestation responses
-	clientExtensionResults := map[string]interface{}{}
 
 	attestationResult := attestationResult{
 		Type:                   "public-key",
