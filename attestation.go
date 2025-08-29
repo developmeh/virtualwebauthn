@@ -65,7 +65,7 @@ func ParseAttestationOptions(str string) (attestationOptions *AttestationOptions
 
 /// Response
 
-func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credential, options AttestationOptions) string {
+func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credential, options AttestationOptions, transports []Transport) string {
 	clientData := clientData{
 		Type:      "webauthn.create",
 		Challenge: base64.RawURLEncoding.EncodeToString(options.Challenge),
@@ -133,12 +133,12 @@ func CreateAttestationResponse(rp RelyingParty, auth Authenticator, cred Credent
 
 	credIDEncoded := base64.RawURLEncoding.EncodeToString(cred.ID)
 
-	transports := []string{"hybrid", "internal"}
+	translatedTransports := translateTransports(transports)
 
 	attestationResponse := attestationResponse{
 		AttestationObject: attestationObjectEncoded,
 		ClientDataJSON:    clientDataJSONEncoded,
-		Transports:        transports,
+		Transports:        translatedTransports,
 	}
 
 	// Create clientExtensionResults - empty map for attestation responses
